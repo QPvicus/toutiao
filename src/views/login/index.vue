@@ -7,33 +7,52 @@
       @click-left="$router.back()"
     />
     <!-- van-cell-group 仅仅是提供了一个上下边框，能看到包裹的边框 -->
-    <van-cell-group>
-      <van-field
-        v-model="user.mobile"
-        icon-prefix="toutiao"
-        left-icon="shouji"
-        placeholder="请输入手机号"
-      />
-      <van-field
-        v-model="user.code"
-        clearable
-        icon-prefix="toutiao"
-        left-icon="yanzhengma"
-        placeholder="请输入密码"
-      >
-        <template #button>
-          <van-button class="send-btn" size="mini" round>发送验证码</van-button>
-        </template>
-      </van-field>
-    </van-cell-group>
+    <van-form validate-first ref="login-form">
+      <van-cell-group>
+        <van-field
+          v-model="user.mobile"
+          icon-prefix="toutiao"
+          left-icon="shouji"
+          placeholder="请输入手机号"
+          name="mobile"
+        />
+        <van-field
+          v-model="user.code"
+          clearable
+          icon-prefix="toutiao"
+          left-icon="yanzhengma"
+          placeholder="请输入密码"
+          name="code"
+        >
+          <template #button>
+            <van-count-down
+              v-if="isSendSmgLoading"
+              :time="60 * 1000"
+              format="ss s"
+            ></van-count-down>
+            <van-button
+              v-else
+              class="send-btn"
+              size="mini"
+              round
+              @click.prevent="onSendSms"
+              :loading="isSendSmgLoading"
+              >发送验证码</van-button
+            >
+          </template>
+        </van-field>
+      </van-cell-group>
+    </van-form>
     <div class="login-btn-wrap">
-      <van-button type="info" block @click="onLogin">登录</van-button>
+      <van-button class="send-btn" type="info" block @click="onLogin"
+        >登录</van-button
+      >
     </div>
   </div>
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, sendSms } from '@/api/user'
 export default {
   name: 'LoginIndex',
   components: {},
@@ -43,7 +62,9 @@ export default {
       user: {
         mobile: '', //手机号
         code: '' // 验证码
-      }
+      },
+      isSendSmgLoading: false,
+      isCountDownShow: false
     }
   },
   computed: {},
@@ -66,6 +87,38 @@ export default {
         console.log('登录失败', err)
         this.$toast.fail('登录失败，手机号或者验证码错误')
       }
+    },
+    async onSendSms() {
+      try {
+        // 校验手机号码
+        await this.$refs['login-form'].validate('mobile')
+
+        // 验证通过，请求发送验证码
+        this.isSendSmgLoading = true //  展示按钮的loading状态，防止网络慢用户多次点击触发发送行为
+        await sendSms(this.user.mobile)
+      } catch (err) {
+        // try 任何代码发生错误都会进入catch
+        //不同的错误有不同的提示，就需要判断
+        // 429 太多请求 限制请求次数
+        let message = ''
+        if (err && err.response && err.response.status === 429) {
+          // 发送短信失败的请求信息
+          message = '发送太频繁了，请稍后重试'
+        } else if (err.name === 'mobile') {
+          // 表单验证失败的错误提示
+          message = err.message
+        } else {
+          // 未知错误
+          message = '发送失败，请求失败'
+        }
+        //提示用户
+        this.$toast({
+          message,
+          position: 'top'
+        })
+      }
+      // 无论发送验证码成功还是失败，最后都要关闭发送按钮的loading 状态
+      this.isSendSmgLoading = false
     }
   }
 }
