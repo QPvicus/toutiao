@@ -29,6 +29,7 @@
               v-if="isSendSmgLoading"
               :time="60 * 1000"
               format="ss s"
+              @finish="isCountDownShow = 'false'"
             ></van-count-down>
             <van-button
               v-else
@@ -44,7 +45,7 @@
       </van-cell-group>
     </van-form>
     <div class="login-btn-wrap">
-      <van-button class="send-btn" type="info" block @click="onLogin"
+      <van-button class="login-btn" type="info" block @click="onLogin"
         >登录</van-button
       >
     </div>
@@ -78,11 +79,17 @@ export default {
         forbidClick: true, // 是否禁止背景点击
         message: '登录中...' // 提示消息
       })
+      // 1.找到数据接口
+      // 2. 封装请求方法
+      // 3，请求用户登录
       try {
-        const res = await login(this.user)
-        console.log('登录成功', res)
+        const { data } = await login(this.user)
         // 提示 success 或者 fail 的时候，会把其他的toast 先清除
+        // 处理响应结果
+        console.log(data)
         this.$toast.success('登录成功')
+        // 将后端返回的用户登录状态(Token等数据) 放到 Vuex 容器中
+        this.$store.commit('setUser', data.data)
       } catch (err) {
         console.log('登录失败', err)
         this.$toast.fail('登录失败，手机号或者验证码错误')
@@ -96,6 +103,8 @@ export default {
         // 验证通过，请求发送验证码
         this.isSendSmgLoading = true //  展示按钮的loading状态，防止网络慢用户多次点击触发发送行为
         await sendSms(this.user.mobile)
+        // 短信发出去了，显示倒计时， 关闭发送按钮
+        this.isCountDownShow = true
       } catch (err) {
         // try 任何代码发生错误都会进入catch
         //不同的错误有不同的提示，就需要判断
@@ -118,6 +127,8 @@ export default {
         })
       }
       // 无论发送验证码成功还是失败，最后都要关闭发送按钮的loading 状态
+      this.isSendSmgLoading = false
+      //发送失败， 显示发送按钮，关闭倒计时
       this.isSendSmgLoading = false
     }
   }
