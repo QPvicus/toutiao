@@ -86,7 +86,6 @@ export default {
         const { data } = await login(this.user)
         // 提示 success 或者 fail 的时候，会把其他的toast 先清除
         // 处理响应结果
-        console.log(data)
         this.$toast.success('登录成功')
         // 将后端返回的用户登录状态(Token等数据) 放到 Vuex 容器中
         this.$store.commit('setUser', data.data)
@@ -110,7 +109,8 @@ export default {
         //不同的错误有不同的提示，就需要判断
         // 429 太多请求 限制请求次数
         let message = ''
-        if (err && err.response && err.response.status === 429) {
+        // err?.response?.status === 429 <=> err && err.response && err.response.status === 429
+        if (err?.response?.status === 429) {
           // 发送短信失败的请求信息
           message = '发送太频繁了，请稍后重试'
         } else if (err.name === 'mobile') {
