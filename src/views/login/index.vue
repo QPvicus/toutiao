@@ -11,36 +11,38 @@
       <van-cell-group>
         <van-field
           v-model="user.mobile"
-          icon-prefix="toutiao"
-          left-icon="shouji"
+          type="tel"
           placeholder="请输入手机号"
+          maxlength="11"
           name="mobile"
+          ref="mobile"
         />
+        <van-icon slot="left-icon" class-prefix="icon" name="shouji"></van-icon>
         <van-field
           v-model="user.code"
-          clearable
-          icon-prefix="toutiao"
-          left-icon="yanzhengma"
           placeholder="请输入密码"
+          maxlength="6"
           name="code"
+          ref="code"
         >
-          <template #button>
+          <van-icon slot="left-icon" class-prefix="icon" name="mima"></van-icon>
+          <van-button
+            slot="button"
+            size="small"
+            :type="isSending ? 'default' : 'primary'"
+            :disabled="isSending"
+            @click="onSendCode"
+          >
             <van-count-down
-              v-if="isSendSmgLoading"
-              :time="60 * 1000"
+              ref="countDown"
+              v-if="isSending"
+              :time="1000 * 60"
               format="ss s"
-              @finish="isCountDownShow = 'false'"
-            ></van-count-down>
-            <van-button
-              v-else
-              class="send-btn"
-              size="mini"
-              round
-              @click.prevent="onSendSms"
-              :loading="isSendSmgLoading"
-              >发送验证码</van-button
-            >
-          </template>
+              :auto-start="false"
+              @finish="isSending = false"
+            />
+            <span v-else>获取验证码</span>
+          </van-button>
         </van-field>
       </van-cell-group>
     </van-form>
@@ -49,6 +51,8 @@
         >登录</van-button
       >
     </div>
+    <van-divider>账号：13911111111 密码：246810</van-divider>
+    <van-divider>如果收不到验证码，请使用万能验证码：246810</van-divider>
   </div>
 </template>
 
@@ -64,8 +68,7 @@ export default {
         mobile: '', //手机号
         code: '' // 验证码
       },
-      isSendSmgLoading: false,
-      isCountDownShow: false
+      isSending: false
     }
   },
   computed: {},
@@ -74,6 +77,7 @@ export default {
   mounted() {},
   methods: {
     async onLogin() {
+      if (!this.checkCode() || !this.checkMobile()) return
       this.$toast.loading({
         duration: 0, // 持续时间， 0表示持续展示不停止
         forbidClick: true, // 是否禁止背景点击
@@ -89,47 +93,100 @@ export default {
         this.$toast.success('登录成功')
         // 将后端返回的用户登录状态(Token等数据) 放到 Vuex 容器中
         this.$store.commit('setUser', data.data)
+        // res.data.data = {token:..., refresh_token:....}
+
+        // 跳转到首页
+        const redirect = this.$route.query.redirect || '/'
+        this.$router.replace(redirect)
       } catch (err) {
         console.log('登录失败', err)
         this.$toast.fail('登录失败，手机号或者验证码错误')
       }
     },
-    async onSendSms() {
+    async onSendCode() {
+      const { mobile } = this.user
+      if (!this.checkMobile()) return
+      // 显示倒计时
+      this.isSending = true
+      // 让验证码输入框聚焦
+      this.$refs['code'].focus()
+      // 开始倒计时
+      this.$nextTick(() => {
+        this.$refs.countDown.start()
+      })
       try {
         // 校验手机号码
-        await this.$refs['login-form'].validate('mobile')
-
-        // 验证通过，请求发送验证码
-        this.isSendSmgLoading = true //  展示按钮的loading状态，防止网络慢用户多次点击触发发送行为
-        await sendSms(this.user.mobile)
-        // 短信发出去了，显示倒计时， 关闭发送按钮
-        this.isCountDownShow = true
+        await sendSms(mobile)
       } catch (err) {
         // try 任何代码发生错误都会进入catch
         //不同的错误有不同的提示，就需要判断
         // 429 太多请求 限制请求次数
-        let message = ''
-        // err?.response?.status === 429 <=> err && err.response && err.response.status === 429
+        // let message = ''
+        // // err?.response?.status === 429 <=> err && err.response && err.response.status === 429
+        // if (err?.response?.status === 429) {
+        //   // 发送短信失败的请求信息
+        //   message = '发送太频繁了，请稍后重试'
+        // } else if (err.name === 'mobile') {
+        //   // 表单验证失败的错误提示
+        //   message = err.message
+        // } else {
+        //   // 未知错误
+        //   message = '发送失败，请求失败'
+        // }
+        let message = '发送失败，请稍后重试'
         if (err?.response?.status === 429) {
-          // 发送短信失败的请求信息
-          message = '发送太频繁了，请稍后重试'
-        } else if (err.name === 'mobile') {
-          // 表单验证失败的错误提示
-          message = err.message
-        } else {
-          // 未知错误
-          message = '发送失败，请求失败'
+          message = '1分钟内只能发送1次，请稍后重试'
         }
         //提示用户
         this.$toast({
           message,
           position: 'top'
         })
+        // 关闭倒计时
+        this.isSending = false
       }
-      // 无论发送验证码成功还是失败，最后都要关闭发送按钮的loading 状态
-      this.isSendSmgLoading = false
-      //发送失败， 显示发送按钮，关闭倒计时
-      this.isSendSmgLoading = false
+    },
+
+    checkMobile() {
+      const { mobile } = this.user
+      if (!mobile) {
+        this.$toast({
+          message: '手机号码不能为空',
+          position: 'top' // 防止键盘太高看不清提示消息
+        })
+        this.$refs.mobile.focus()
+        return false
+      }
+      // 判断手机格式
+      if (!/^1[3578]\d{9}$/.test(mobile)) {
+        this.$toast({
+          message: '手机格式错误',
+          position: 'top'
+        })
+        this.$refs.mobile.focus()
+        return false
+      }
+      return true
+    },
+    checkCode() {
+      const { code } = this.user
+      if (!code) {
+        this.$toast({
+          message: '验证码不能为空',
+          position: 'top'
+        })
+        this.$refs.code.focus()
+        return false
+      }
+      if (!/^\d{6}$/.test(code)) {
+        this.$toast({
+          message: '验证码格式错误',
+          position: 'top'
+        })
+        this.$refs.code.focus()
+        return false
+      }
+      return true
     }
   }
 }
