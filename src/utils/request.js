@@ -37,6 +37,7 @@ request.interceptors.request.use(
     return config
   },
   function(err) {
+    // Do something with request error
     return Promise.reject(err)
   }
 )
@@ -82,7 +83,7 @@ request.interceptors.response.use(
         // 把之前用户失败的请求继续发送出去
         // config 是一个对象， 包含了多种配置 url method 等等
         // return  是把request请求结果继续返回给发请求的具体位置
-        return error.config
+        return request(error.config)
       } catch (error) {
         // 如果获取失败， 直接跳转到登录页面
         console.log('请求刷新 token 失败', error)

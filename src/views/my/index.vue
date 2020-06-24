@@ -97,7 +97,9 @@ export default {
   },
   watch: {},
   created() {
-    this.loadCurrentUser()
+    if (this.$store.state.user) {
+      this.loadCurrentUser()
+    }
   },
   mounted() {},
   methods: {

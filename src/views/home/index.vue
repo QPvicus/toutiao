@@ -1,10 +1,24 @@
 <template>
-  <div class="login-container">home</div>
+  <div class="home-container">
+    <!-- 导航栏 -->
+    <van-nav-bar class="app-nav-bar">
+      <van-button
+        slot="title"
+        class="search-btn"
+        icon="search"
+        type="info"
+        round
+        size="small"
+      >
+        搜索</van-button
+      >
+    </van-nav-bar>
+  </div>
 </template>
 
 <script>
 export default {
-  name: 'LoginIndex',
+  name: 'HomeIndex',
   components: {},
   props: {},
   data() {
