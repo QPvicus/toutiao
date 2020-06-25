@@ -15,18 +15,25 @@
     </van-nav-bar>
     <!-- 文章频道列表 -->
     <van-tabs v-model="active" class="channel-tabs">
-      <van-tab :title="item.name" v-for="item in channels" :key="item.id"
-        >{{ item.name }} 的详细内容</van-tab
-      >
+      <van-tab
+        :title="channel.name"
+        v-for="channel in channels"
+        :key="channel.id"
+        >{{ channel.name }}
+        <article-list :channel="channel" />
+      </van-tab>
     </van-tabs>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user'
+import ArticleList from '@/components/ArticleLIst'
 export default {
   name: 'HomeIndex',
-  components: {},
+  components: {
+    ArticleList
+  },
   props: {},
   data() {
     return {
