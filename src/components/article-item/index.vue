@@ -19,7 +19,6 @@
         <span>{{ article.pubdate | relativeTime }}</span>
       </div>
     </div>
-    <!-- 默认插槽的名字叫 default，可以省略 -->
     <van-image
       v-if="article.cover.type === 1"
       class="right-cover"

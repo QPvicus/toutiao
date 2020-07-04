@@ -1,5 +1,15 @@
 <template>
   <div class="home-container">
+    <!-- 频道编辑 -->
+    <van-popup
+      v-model="isChannelEditShow"
+      position="bottom"
+      closeable
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <channel-edit />
+    </van-popup>
     <!-- 导航栏 -->
     <van-nav-bar class="app-nav-bar">
       <van-button
@@ -19,7 +29,7 @@
         :title="channel.name"
         v-for="channel in channels"
         :key="channel.id"
-        >{{ channel.name }}
+      >
         <article-list :channel="channel" />
       </van-tab>
     </van-tabs>
@@ -28,17 +38,20 @@
 
 <script>
 import { getUserChannels } from '@/api/user'
-import ArticleList from '@/components/ArticleLIst'
+import ArticleList from './components/ArticleLIst'
+import ChannelEdit from './components/channel-edit'
 export default {
   name: 'HomeIndex',
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   props: {},
   data() {
     return {
       active: 0, // 控制激活的标签
-      channels: [] // 频道列表
+      channels: [], // 频道列表
+      isChannelEditShow: false
     }
   },
   computed: {},

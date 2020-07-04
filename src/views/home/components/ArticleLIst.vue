@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     async onLoad() {
-      console.log('onLoad')
       const { data } = await getArticles({
         channel_id: this.channel.id,
         timestamp: this.timestamp || Date.now(),
@@ -77,7 +76,6 @@ export default {
       })
       // 往顶部追加
       const { results } = data.data
-      console.log(results)
       this.articles.unshift(...results)
       this.isRefreshLoading = false
       this.refreshSuccessText = `更新了${results.length}条数据`
