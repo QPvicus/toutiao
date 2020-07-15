@@ -24,21 +24,29 @@ const routes = [
         component: () => import('@/views/home/')
       },
       {
-        path: 'qa',
+        //问答
+        path: '/qa',
         name: 'qa',
         component: () => import('@/views/qa/')
       },
       {
+        // 视频
         path: '/video',
         name: 'video',
         component: () => import('@/views/video/')
       },
       {
+        // 我的
         path: 'my',
         name: 'my',
         component: () => import('@/views/my/')
       }
     ]
+  },
+  {
+    path: '/search',
+    name: 'search',
+    component: () => import('@/views/search')
   }
 ]
 

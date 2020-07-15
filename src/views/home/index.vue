@@ -10,6 +10,7 @@
         type="info"
         round
         size="small"
+        @click="$router.push('/search')"
       >
         搜索</van-button
       >
