@@ -8,6 +8,7 @@ import jsonBig from 'json-bigint'
 
 import store from '@/store'
 import router from '@/router'
+import { Notify } from 'vant'
 
 // axios.create
 const request = axios.create({
@@ -16,12 +17,15 @@ const request = axios.create({
 /**
  *  配置处理后端返回数据中超出js安全整数范围问题
  */
+// transformResponse 允许自定义原始的响应数据 (字符串)
 request.defaults.transformResponse = [
   function(data) {
     try {
+      //如果转换成功 返回转换的数据结果
       return jsonBig.parse(data)
     } catch (err) {
-      return {}
+      // 如果转换失败 则包装为统一数据格式并返回
+      return data
     }
   }
 ]
@@ -74,7 +78,6 @@ request.interceptors.response.use(
           }
         })
         // 如果获取成功， 则把新的token 更新到容器中
-        console.log('刷新成功', res)
         store.commit('sendUser', {
           token: res.data.data.token, // 获取最新可用的token
           refresh_token: user.refresh_token // 仍然是原来的token
@@ -89,6 +92,8 @@ request.interceptors.response.use(
         console.log('请求刷新 token 失败', error)
         router.push('/login')
       }
+    } else if (error.response.status === 500) {
+      Notify('服务端异常，稍后重试')
     }
     return Promise.reject(error)
   }

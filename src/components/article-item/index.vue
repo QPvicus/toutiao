@@ -3,8 +3,12 @@
     <div slot="title" class="title van-multi-ellipsis--l3">
       {{ article.title }}
     </div>
-    <div slot="label">
-      <div v-if="article.cover.type === 3" class="cover-wrap">
+    <div slot="label" @click="onItemClick">
+      <div
+        v-if="article.cover.type === 3"
+        class="cover-wrap"
+        @click="onItemClick"
+      >
         <div
           class="cover-wrap-item"
           v-for="(img, index) in article.cover.images"
@@ -36,6 +40,17 @@ export default {
       type: Object,
       required: true
     }
+  },
+  methods: {
+    onItemClick() {
+      // 点击 跳转到文章页
+      this.$router.push({
+        name: 'article',
+        params: {
+          articleId: this.article.art_id.toString()
+        }
+      })
+    }
   }
 }
 </script>
@@ -56,7 +71,6 @@ export default {
     width: 116px;
     height: 73px;
   }
-
   .cover-wrap {
     padding: 15px 0;
     display: flex;
@@ -72,7 +86,6 @@ export default {
       }
     }
   }
-
   .label-wrap {
     font-size: 11px;
     color: #b4b4b4;

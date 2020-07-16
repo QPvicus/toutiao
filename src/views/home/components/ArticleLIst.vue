@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import ArticleItem from '@/components/article-item/index'
+import ArticleItem from '@/components/article-item'
 import { getArticles } from '@/api/article'
 export default {
   name: 'ArticleList',
