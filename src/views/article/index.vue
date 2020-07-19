@@ -28,7 +28,7 @@
     <commend-list />
     <!-- 文章评论列表 -->
     <!-- 底部区域 -->
-    <article-footer />
+    <article-footer :article="article" />
     <!-- 底部区域 -->
     <!-- 加载完成， 文章详情 -->
   </div>
