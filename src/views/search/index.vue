@@ -55,6 +55,7 @@ export default {
       // 同步到本地存储
       setItem('search-histories', newVal)
     }
+    // <=>searchHistories : {handle () { }}
   },
   methods: {
     onSearch(q) {

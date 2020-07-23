@@ -1,9 +1,19 @@
 <template>
   <div class="footer">
-    <van-button round plain type="default" style="width:160px" size="small"
+    <van-button
+      round
+      plain
+      type="default"
+      style="width:160px"
+      size="small"
+      @click="$emit('click-write')"
       >写评论</van-button
     >
-    <van-icon name="comment-o" class="icon-comment" badge="0"></van-icon>
+    <van-icon
+      name="comment-o"
+      class="icon-comment"
+      :badge="totalCommendCount"
+    ></van-icon>
     <van-icon
       class-prefix="toutiao"
       name="shoucang"
@@ -31,6 +41,10 @@ export default {
   props: {
     article: {
       type: Object,
+      required: true
+    },
+    totalCommendCount: {
+      type: Number,
       required: true
     }
   },

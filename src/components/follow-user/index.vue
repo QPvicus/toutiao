@@ -45,9 +45,11 @@ export default {
         // input 跟 v-model 有关
         this.$emit('input', !this.value)
       } catch (err) {
+        let message = '操作失败，稍后重试'
         if (err.response?.status === 400) {
-          this.$toast('你不能关注你自己')
+          message = '你不能关注你自己'
         }
+        this.$toast(message)
       }
       this.loading = false
     }
