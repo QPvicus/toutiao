@@ -5,7 +5,19 @@
     finished-text="没有更多了"
     @load="onLoad"
   >
-    <div class="article-list" v-for="(article, index) in list" :key="index">
+    <div
+      class="article-list"
+      v-for="(article, index) in list"
+      :key="index"
+      @click="
+        $router.push({
+          name: 'article',
+          params: {
+            articleId: article.art_id.toString()
+          }
+        })
+      "
+    >
       <div class="article-info">
         <div class="author">
           <van-image round class="avatar" fit="cover" :src="user.photo" />
