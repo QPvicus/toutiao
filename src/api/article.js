@@ -74,3 +74,14 @@ export const deleteDislike = articleId => {
     url: `/app/v1_0/article/dislikes/${articleId}`
   })
 }
+
+/**
+ * 获取指定用户文章
+ */
+export const getArticleByUser = (userId, params) => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/users/${userId}/articles`,
+    params
+  })
+}

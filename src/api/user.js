@@ -65,3 +65,13 @@ export const unFollowUser = userId => {
     url: `/app/v1_0/user/followings/${userId}`
   })
 }
+
+/**
+ * 获取指定用户信息
+ */
+export const getUserById = userId => {
+  return request({
+    method: 'GET',
+    url: `/app/v1_0/users/${userId}`
+  })
+}

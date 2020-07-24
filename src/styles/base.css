@@ -1,0 +1,12 @@
+.page-navbar {
+  background-color: #3196fa !important;
+}
+.page-navbar .van-nav-bar__title,
+.page-navbar .van-icon,
+.page-navbar .van-nav-bar__text {
+  color: #fff !important;
+}
+.page-container {
+  padding: 46px 0 50px;
+  font-size: 14px;
+}

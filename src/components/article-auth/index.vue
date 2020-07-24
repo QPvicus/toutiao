@@ -1,5 +1,15 @@
 <template>
-  <div class="author">
+  <div
+    class="author"
+    @click="
+      $router.push({
+        name: 'user',
+        params: {
+          userId: article.aut_id.toString()
+        }
+      })
+    "
+  >
     <div class="base-info">
       <van-image
         :src="article.aut_photo"

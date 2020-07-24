@@ -1,6 +1,18 @@
 /* 
 *  全局样式
 */
+.page-navbar {
+  background-color: #3196fa;
+}
+.page-navbar .van-nav-bar__title,
+.page-navbar .van-icon,
+.page-navbar .van-nav-bar__text {
+  color: #fff;
+}
+.page-container {
+  padding: 46px 0 50px;
+  font-size: 14px;
+}
 @font-face {
   font-family: "toutiao";
   src: url('//at.alicdn.com/t/font_1807762_wgyu54o0zqf.eot?t=1589027112128');
