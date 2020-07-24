@@ -31,7 +31,7 @@
         :name="comment.is_liking ? 'good-job' : 'good-job-o'"
         :color="comment.is_liking ? '#e5645f' : ''"
         :loading="commentLoading"
-        @click="onCommentLike"
+        @click="onCommentLike(comment)"
         >{{ comment.like_count > 0 ? comment.like_count : ' 赞' }}</van-icon
       >
     </div>
@@ -55,18 +55,19 @@ export default {
     }
   },
   methods: {
-    async onCommentLike() {
+    async onCommentLike(comment) {
       this.commentLoading = true
       try {
-        if (this.comment.is_liking) {
-          await deleteCommentLike(this.comment.com_id)
+        if (comment.is_liking) {
+          await deleteCommentLike(comment.com_id.toString())
         } else {
-          await addCommentLike(this.comment.com_id)
+          await addCommentLike(comment.com_id.toString())
         }
 
         // 更新视图
-        this.comment.is_liking = !this.is_liking
-        this.comment.like_count += this.comment.is_liking ? 1 : -1
+        comment.is_liking = !comment.is_liking
+        comment.like_count += comment.is_liking ? 1 : -1
+        this.$toast.success(comment.is_liking ? '点赞成功' : '取消点赞')
       } catch (err) {
         this.$toast.fail('操作失败，稍后重试')
       }

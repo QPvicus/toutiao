@@ -19,22 +19,23 @@ export const getComments = params => {
  * 评论回复点赞
  */
 
-export const addCommentLike = target => {
+export const addCommentLike = commentId => {
   return request({
     method: 'POST',
-    url: '/app/v1_0/article/likings',
+    url: '/app/v1_0/comment/likings',
     data: {
-      target
+      target: commentId
     }
   })
 }
+
 /**
  * 取消回复点赞
  */
 export const deleteCommentLike = commentId => {
   return request({
     method: 'DELETE',
-    url: ` /app/v1_0/comment/likings/${commentId}`
+    url: `/app/v1_0/comment/likings/${commentId}`
   })
 }
 
