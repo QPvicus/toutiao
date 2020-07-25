@@ -75,3 +75,31 @@ export const getUserById = userId => {
     url: `/app/v1_0/users/${userId}`
   })
 }
+
+/**
+ *获取用户的关注猎豹
+ */
+export const getFollowingsByUser = (userId, params) => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/followings',
+    params,
+    data: {
+      target: userId.toString()
+    }
+  })
+}
+/**
+ * 获取用户粉丝的列表
+ */
+
+export const getFansByUser = (userId, params) => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/followers',
+    params,
+    data: {
+      target: userId.toString()
+    }
+  })
+}

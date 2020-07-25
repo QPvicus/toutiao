@@ -60,6 +60,15 @@ const routes = [
     name: 'user',
     component: () => import('@/views/user'),
     props: true
+  },
+  {
+    // 用户粉丝关注
+    path: '/user/:userId/follow',
+    name: 'user-follow',
+    component: () => import('@/views/user-follow'),
+    props: true,
+    // 元信息
+    meta: { requiresAuth: true }
   }
 ]
 
