@@ -1,6 +1,11 @@
 <template>
   <div class="user-follow">
-    <van-nav-bar class="page-navbar" left-arrow @click-left="$router.back()">
+    <van-nav-bar
+      class="page-navbar"
+      left-arrow
+      @click-left="$router.back()"
+      fixed
+    >
       <van-tabs v-model="active" slot="title" background="#3296fa">
         <van-tab title="关注" :to="`/user/${userId}/follow`" replace>
           <follow-list />

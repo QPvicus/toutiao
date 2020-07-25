@@ -16,7 +16,13 @@
           src="https://img.yzcdn.cn/vant/cat.jpeg"
         />
         <div class="name" slot="title">昵称</div>
-        <van-button class="update-btn" size="small" round>编辑资料</van-button>
+        <van-button
+          class="update-btn"
+          size="small"
+          round
+          @click="$router.push('/user/profile')"
+          >编辑资料</van-button
+        >
       </van-cell>
       <van-grid class="data-info" :border="false">
         <van-grid-item class="data-info-item">

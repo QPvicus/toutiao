@@ -103,3 +103,23 @@ export const getFansByUser = (userId, params) => {
     }
   })
 }
+
+/**
+ * 获取个人资料
+ */
+export const getUserProfile = () => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+/**
+ *  更新用户照片
+ */
+export const updateUserPhoto = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/photo',
+    data
+  })
+}
