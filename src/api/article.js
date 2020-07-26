@@ -85,3 +85,36 @@ export const getArticleByUser = (userId, params) => {
     params
   })
 }
+
+/**
+ *  获取用户文章
+ */
+export const getUserArticles = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/articles',
+    params
+  })
+}
+
+/**
+ *  获取用户收藏
+ */
+export const getArticleCollect = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/article/collections',
+    params
+  })
+}
+
+/**
+ *  获取用户历史
+ */
+export const getArticleHistories = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/histories',
+    params
+  })
+}

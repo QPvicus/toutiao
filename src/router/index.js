@@ -75,7 +75,26 @@ const routes = [
     props: true,
     // 元信息
     meta: { requiresAuth: true }
+  },
+  {
+    // 作品
+    path: '/my-article/:type?',
+    name: 'my-article',
+    component: () => import('@/views/user-articles'),
+    props: true
   }
+  // {
+  //   // 收藏
+  //   path: '/my-article/collect',
+  //   name: 'my-article-collect',
+  //   component: () => import('@/views/user-articles')
+  // },
+  // {
+  //   // 历史
+  //   path: '/my-article/history',
+  //   name: 'my-article-history',
+  //   component: () => import('@/views/user-articles')
+  // }
 ]
 
 const router = new VueRouter({

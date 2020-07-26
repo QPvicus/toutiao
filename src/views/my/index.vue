@@ -65,18 +65,27 @@
       <div class="text">登录 / 注册</div>
     </div>
 
-    <van-grid class="nav-grid mb-4" :column-num="2">
+    <van-grid class="nav-grid mb-4" :column-num="3" clickable>
       <van-grid-item
         class="nav-grid-item"
         icon-prefix="toutiao"
         icon="shoucang"
         text="收藏"
+        to="/my-article/collect"
       />
       <van-grid-item
         class="nav-grid-item"
         icon-prefix="toutiao"
         icon="lishi"
         text="历史"
+        to="/my-article/history"
+      />
+      <van-grid-item
+        class="nav-grid-item"
+        icon-prefix="toutiao"
+        icon="zuopin"
+        text="作品"
+        to="/my-article"
       />
     </van-grid>
 
@@ -223,6 +232,9 @@ export default {
       }
       .toutiao-lishi {
         color: #ff9d1d;
+      }
+      .toutiao-zuopin {
+        color: #eb5253;
       }
       .van-grid-item__text {
         font-size: 14px;
