@@ -65,5 +65,8 @@ export default {
     bottom: 0;
     z-index: 1;
   }
+  /deep/ .van-tabs__content {
+    margin-top: 46px;
+  }
 }
 </style>

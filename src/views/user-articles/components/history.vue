@@ -9,7 +9,6 @@
       <van-cell
         v-for="(item, index) in list"
         :key="index"
-        :title="item.title"
         @click="
           $router.push({
             name: 'article',
@@ -18,17 +17,22 @@
             }
           })
         "
-      />
+      >
+        <article-item :article="item" />
+      </van-cell>
     </van-list>
   </div>
 </template>
 
 <script>
 import { getArticleHistories } from '@/api/article'
+import articleItem from './article-item'
 
 export default {
   name: 'UserArticle',
-  components: {},
+  components: {
+    articleItem
+  },
   props: {},
   data() {
     return {
