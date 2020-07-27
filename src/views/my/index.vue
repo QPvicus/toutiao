@@ -13,9 +13,9 @@
           slot="icon"
           round
           fit="cover"
-          src="https://img.yzcdn.cn/vant/cat.jpeg"
+          :src="currentUser.photo"
         />
-        <div class="name" slot="title">昵称</div>
+        <div class="name" slot="title">{{ currentUser.name }}</div>
         <van-button
           class="update-btn"
           size="small"

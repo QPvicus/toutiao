@@ -63,14 +63,14 @@ request.interceptors.response.use(
       const user = store.state.user
       if (!user || !user.refresh_token) {
         // 若没有则跳转路由
-        router.push('/login')
+        redirectLogin()
         // 代码后面就不再执行了
         return
       }
 
       //如果有refresh_token 则请求获取新的 token
       try {
-        const res = await axios({
+        const { data } = await axios({
           method: 'PUT',
           url: 'http://ttapi.research.itcast.cn/app/v1_0/authorizations',
           headers: {
@@ -79,8 +79,8 @@ request.interceptors.response.use(
         })
         // 如果获取成功， 则把新的token 更新到容器中
         store.commit('sendUser', {
-          token: res.data.data.token, // 获取最新可用的token
-          refresh_token: user.refresh_token // 仍然是原来的token
+          ...user,
+          token: data.data.token // 获取最新可用的token
         })
 
         // 把之前用户失败的请求继续发送出去
@@ -90,7 +90,7 @@ request.interceptors.response.use(
       } catch (error) {
         // 如果获取失败， 直接跳转到登录页面
         console.log('请求刷新 token 失败', error)
-        router.push('/login')
+        redirectLogin()
       }
     } else if (error.response.status === 500) {
       Notify('服务端异常，稍后重试')
@@ -98,5 +98,14 @@ request.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+function redirectLogin() {
+  router.push({
+    name: 'login',
+    query: {
+      redirect: router.currentRoute.fullPath
+    }
+  })
+}
 
 export default request
