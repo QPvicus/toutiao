@@ -62,6 +62,11 @@ const routes = [
     component: () => import('@/views/user-profile')
   },
   {
+    path: '/user/chat',
+    name: 'user-chat',
+    component: () => import('@/views/user-chat')
+  },
+  {
     path: '/user/:userId',
     name: 'user',
     component: () => import('@/views/user'),
@@ -83,6 +88,7 @@ const routes = [
     component: () => import('@/views/user-articles'),
     props: true
   }
+
   // {
   //   // 收藏
   //   path: '/my-article/collect',
